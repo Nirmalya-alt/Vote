@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Maha Vote 2026 🗳️</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #fdf6ec;
+    --card: #ffffff;
+    --border: #e8ddd0;
+    --text: #1a1208;
+    --muted: #7a6a56;
+    --accent: #c94b1a;
+    --radius: 16px;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Baloo 2', cursive;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    background-image:
+      radial-gradient(circle at 15% 15%, rgba(255,140,0,0.08) 0%, transparent 50%),
+      radial-gradient(circle at 85% 80%, rgba(30,120,60,0.06) 0%, transparent 50%),
+      repeating-linear-gradient(45deg, transparent, transparent 40px, rgba(0,0,0,0.012) 40px, rgba(0,0,0,0.012) 41px);
+  }
+  .wrapper { max-width: 680px; margin: 0 auto; padding: 2rem 1rem 4rem; }
+
+  /* ── HEADER ── */
+  .site-header { text-align: center; margin-bottom: 2rem; animation: fadeDown 0.5s ease; }
+  .site-header .icon { font-size: 44px; display: block; margin-bottom: 6px; animation: bounce 2.2s infinite; }
+  @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-7px)} }
+  .site-header h1 { font-size: 2rem; font-weight: 800; }
+  .site-header h1 span { color: var(--accent); }
+  .site-header p { font-size: 14px; color: var(--muted); margin-top: 3px; }
+  @keyframes fadeDown { from{opacity:0;transform:translateY(-14px)} to{opacity:1;transform:translateY(0)} }
+
+  /* ── SCREENS ── */
+  .screen { display: none; animation: fadeUp 0.4s ease; }
+  .screen.active { display: block; }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
+
+  /* ── SIGNUP ── */
+  .signup-card {
+    background: var(--card); border: 1.5px solid var(--border);
+    border-radius: var(--radius); padding: 2rem 2rem 1.75rem;
+    max-width: 420px; margin: 0 auto;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08); text-align: center;
+  }
+  .signup-card h2 { font-size: 1.3rem; font-weight: 800; margin-bottom: 6px; }
+  .signup-card p { font-size: 13px; color: var(--muted); margin-bottom: 1.5rem; line-height: 1.6; }
+  .input-wrap { margin-bottom: 8px; }
+  .input-wrap input {
+    width: 100%; padding: 12px 16px;
+    border: 1.5px solid var(--border); border-radius: 10px;
+    font-family: 'Baloo 2', cursive; font-size: 15px;
+    background: #fafaf8; color: var(--text);
+    outline: none; transition: border-color 0.2s, background 0.2s;
+  }
+  .input-wrap input:focus { border-color: #999; background: #fff; }
+  .input-wrap input::placeholder { color: #ccc; }
+  .err-msg { font-size: 12px; color: #c62828; margin-bottom: 10px; min-height: 18px; text-align: left; padding-left: 4px; }
+  .btn-primary {
+    width: 100%; padding: 12px; background: var(--text); color: #fff;
+    border: none; border-radius: 10px;
+    font-family: 'Baloo 2', cursive; font-size: 15px; font-weight: 700;
+    cursor: pointer; transition: background 0.15s, transform 0.1s;
+  }
+  .btn-primary:hover { background: #333; }
+  .btn-primary:active { transform: scale(0.97); }
+  .signup-footer { margin-top: 1.2rem; font-size: 13px; color: var(--muted); }
+  .signup-footer a { color: var(--accent); cursor: pointer; text-decoration: underline; }
+
+  /* ── USER BAR ── */
+  .user-bar {
+    display: flex; align-items: center; justify-content: space-between;
+    background: var(--card); border: 1.5px solid var(--border);
+    border-radius: 12px; padding: 10px 16px;
+    margin-bottom: 1.25rem; box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+  }
+  .user-bar .left { display: flex; align-items: center; gap: 10px; }
+  .avatar {
+    width: 38px; height: 38px; border-radius: 50%;
+    background: var(--text); color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; font-weight: 800; text-transform: uppercase; flex-shrink: 0;
+  }
+  .user-info .uname { font-size: 14px; font-weight: 800; }
+  .user-info .utag  { font-size: 12px; color: var(--muted); }
+
+  /* ── PARTY GRID ── */
+  .party-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 13px; margin-bottom: 1.4rem; }
+  .party-card {
+    background: var(--card); border: 1.5px solid var(--border);
+    border-radius: var(--radius); padding: 1.2rem 1rem 1rem;
+    text-align: center; cursor: pointer; position: relative; overflow: hidden;
+    transition: transform 0.18s, border-color 0.18s, box-shadow 0.18s;
+    animation: cardIn 0.45s ease both;
+  }
+  .party-card:nth-child(1){animation-delay:0.04s}
+  .party-card:nth-child(2){animation-delay:0.08s}
+  .party-card:nth-child(3){animation-delay:0.13s}
+  .party-card:nth-child(4){animation-delay:0.17s}
+  .party-card:nth-child(5){animation-delay:0.21s}
+  @keyframes cardIn { from{opacity:0;transform:translateY(18px)} to{opacity:1;transform:translateY(0)} }
+  .party-card:hover:not(.disabled) { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,0,0,0.11); border-color: #bbb; }
+  .party-card.disabled { cursor: not-allowed; opacity: 0.6; }
+  .party-card.selected { border: 2px solid #2e7d32; box-shadow: 0 0 0 3px rgba(46,125,50,0.12); }
+  .logo-wrap { width: 68px; height: 68px; margin: 0 auto 10px; }
+  .logo-wrap svg { width: 100%; height: 100%; }
+  .party-name   { font-size: 1.05rem; font-weight: 800; }
+  .party-slogan { font-size: 12px; color: var(--muted); margin-top: 2px; font-style: italic; }
+  .vote-btn {
+    display: block; width: 100%; margin-top: 12px; padding: 7px 10px;
+    border-radius: 10px; color: #fff;
+    font-family: 'Baloo 2', cursive; font-size: 13px; font-weight: 700;
+    border: none; cursor: pointer; transition: filter 0.15s, transform 0.1s;
+  }
+  .vote-btn:hover { filter: brightness(1.18); }
+  .vote-btn:active { transform: scale(0.96); }
+  .my-vote-tag {
+    display: inline-block; margin-top: 10px; padding: 4px 12px;
+    border-radius: 999px; background: #e8f5e9; color: #2e7d32;
+    font-size: 12px; font-weight: 700; border: 1px solid #a5d6a7;
+  }
+  .confetti-zone { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+  .cdot { position: absolute; width: 7px; height: 7px; border-radius: 50%; opacity: 0; animation: cfall 0.72s ease-out forwards; }
+  @keyframes cfall { 0%{opacity:1;transform:translateY(0) scale(0.4)} 100%{opacity:0;transform:translateY(68px) scale(1)} }
+
+  /* ── FUNNY OVERLAY ── */
+  .funny-overlay {
+    position: fixed; inset: 0; z-index: 200;
+    background: rgba(0,0,0,0.55);
+    display: flex; align-items: center; justify-content: center;
+    animation: fadein 0.25s ease;
+    backdrop-filter: blur(3px);
+  }
+  @keyframes fadein { from{opacity:0} to{opacity:1} }
+  .funny-box {
+    background: var(--card);
+    border-radius: 24px;
+    padding: 2.5rem 2rem;
+    text-align: center;
+    max-width: 340px; width: 90%;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+    animation: popIn 0.35s cubic-bezier(0.175,0.885,0.32,1.275);
+  }
+  @keyframes popIn { from{transform:scale(0.6);opacity:0} to{transform:scale(1);opacity:1} }
+  .funny-emoji { font-size: 56px; display: block; margin-bottom: 12px; animation: wiggle 0.6s ease infinite alternate; }
+  @keyframes wiggle { from{transform:rotate(-8deg) scale(1)} to{transform:rotate(8deg) scale(1.1)} }
+  .funny-text { font-size: 1.5rem; font-weight: 800; line-height: 1.3; margin-bottom: 8px; }
+  .funny-sub  { font-size: 13px; color: var(--muted); }
+  .funny-timer { font-size: 11px; color: var(--muted); margin-top: 14px; }
+  .funny-timer span { font-weight: 800; color: var(--accent); font-size: 14px; }
+
+  /* ── REDIRECT COUNTDOWN ── */
+  .redirect-bar {
+    background: #fff3e0; border: 1.5px solid #ffcc80;
+    border-radius: 12px; padding: 12px 16px;
+    margin-bottom: 1.25rem; text-align: center;
+    font-size: 13px; color: #e65100; font-weight: 700;
+    animation: fadeUp 0.3s ease;
+    display: none;
+  }
+  .redirect-bar.show { display: block; }
+  .rcount { font-size: 20px; font-weight: 800; color: var(--accent); }
+
+  /* ── ACTIONS ── */
+  .actions { display: flex; gap: 10px; margin-bottom: 1.2rem; }
+  .btn-dark {
+    flex: 1; padding: 11px; border-radius: 12px;
+    background: var(--text); color: #fff;
+    font-family: 'Baloo 2', cursive; font-size: 14px; font-weight: 700;
+    border: none; cursor: pointer; transition: background 0.15s, transform 0.1s;
+  }
+  .btn-dark:hover { background: #333; }
+  .btn-dark:active { transform: scale(0.97); }
+
+  /* ── RESULTS LOCKED ── */
+  .results-locked {
+    background: var(--card); border: 1.5px dashed var(--border);
+    border-radius: var(--radius); padding: 1.5rem;
+    text-align: center; margin-bottom: 1rem;
+    display: none;
+  }
+  .results-locked.show { display: block; }
+  .lock-icon { font-size: 36px; display: block; margin-bottom: 8px; }
+  .lock-text { font-size: 14px; color: var(--muted); }
+  .lock-progress { margin-top: 12px; }
+  .lock-bar-track { background: #f0ebe3; border-radius: 999px; height: 8px; overflow: hidden; margin-top: 6px; }
+  .lock-bar-fill  { height: 100%; border-radius: 999px; background: var(--accent); transition: width 0.5s ease; }
+
+  /* ── RESULTS ── */
+  .results-box {
+    background: var(--card); border: 1.5px solid var(--border);
+    border-radius: var(--radius); padding: 1.5rem;
+    display: none; animation: fadeUp 0.35s ease; margin-bottom: 1rem;
+  }
+  .results-box.open { display: block; }
+  .results-box h2 { font-size: 1.05rem; font-weight: 800; margin-bottom: 1.2rem; }
+  .result-row { margin-bottom: 15px; }
+  .result-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; }
+  .result-label { font-size: 14px; font-weight: 700; display: flex; align-items: center; gap: 6px; }
+  .mini-logo { width: 22px; height: 22px; flex-shrink: 0; }
+  .result-count { font-size: 13px; color: var(--muted); font-weight: 600; }
+  .bar-track { background: #f0ebe3; border-radius: 999px; height: 12px; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 999px; width: 0; transition: width 0.65s cubic-bezier(0.25,1,0.5,1); }
+  .winner-box {
+    text-align: center; margin-top: 1.4rem; padding: 1.2rem;
+    border-radius: 12px; background: linear-gradient(135deg,#fff9e6,#fff3cd);
+    border: 1.5px solid #f9a825;
+  }
+  .winner-trophy { font-size: 2rem; }
+  .winner-name { font-size: 1.05rem; font-weight: 800; margin-top: 4px; }
+  .winner-sub  { font-size: 12px; color: var(--muted); margin-top: 2px; }
+  .total-note  { text-align: center; margin-top: 10px; font-size: 12px; color: var(--muted); }
+
+  /* ── VOTER LOG ── */
+  .voter-log {
+    background: var(--card); border: 1.5px solid var(--border);
+    border-radius: var(--radius); padding: 1.25rem;
+    margin-top: 1rem; display: none; animation: fadeUp 0.35s ease;
+  }
+  .voter-log.open { display: block; }
+  .voter-log h3 { font-size: 15px; font-weight: 800; margin-bottom: 12px; }
+  .voter-log table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .voter-log th { text-align: left; padding: 6px 8px; color: var(--muted); font-weight: 600; border-bottom: 1.5px solid var(--border); }
+  .voter-log td { padding: 8px 8px; border-bottom: 0.5px solid var(--border); vertical-align: middle; }
+  .voter-log tr:last-child td { border-bottom: none; }
+  .empty-log { text-align: center; color: var(--muted); font-size: 13px; padding: 1rem 0; }
+  .you-tag { font-size: 10px; color: #2e7d32; font-weight: 600; margin-left: 5px; background: #e8f5e9; padding: 1px 6px; border-radius: 999px; }
+
+  /* ── BOTTOM ── */
+  .bottom-links { margin-top: 1rem; }
+  .btn-outline {
+    width: 100%; padding: 10px; border-radius: 12px;
+    background: transparent; color: #b71c1c; border: 1.5px solid #ef9a9a;
+    font-family: 'Baloo 2', cursive; font-size: 13px; font-weight: 700;
+    cursor: pointer; transition: background 0.15s;
+  }
+  .btn-outline:hover { background: #fce4ec; }
+
+  /* ── TOAST ── */
+  .toast {
+    position: fixed; bottom: 26px; left: 50%; transform: translateX(-50%);
+    background: var(--text); color: #fff;
+    padding: 10px 22px; border-radius: 999px;
+    font-family: 'Baloo 2', cursive; font-size: 14px; font-weight: 600;
+    pointer-events: none; z-index: 999; white-space: nowrap;
+    animation: tin 0.3s ease, tout 0.4s 2.1s ease forwards;
+  }
+  @keyframes tin  { from{opacity:0;transform:translateX(-50%) translateY(10px)} to{opacity:1;transform:translateX(-50%) translateY(0)} }
+  @keyframes tout { from{opacity:1} to{opacity:0} }
+
+  .footer { text-align: center; margin-top: 2.5rem; font-size: 12px; color: var(--muted); }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <div class="site-header">
+    <span class="icon">🗳️</span>
+    <h1>Maha <span>Vote</span> 2026</h1>
+    <p>Ek vote, ek awaaz! Sign in aur apna party choose karo.</p>
+  </div>
+
+  <!-- ═══ SCREEN 1: SIGNUP ═══ -->
+  <div class="screen active" id="screen-signup">
+    <div class="signup-card">
+      <h2>👤 Kaun hai bhai tu?</h2>
+      <p>Apna naam daal aur vote de!<br>Ek naam = ek vote — no jugaad! 😤</p>
+      <div class="input-wrap">
+        <input type="text" id="username-input" placeholder="e.g. Rahul, Priya, Ratan..." maxlength="30" autocomplete="off"
+          onkeydown="if(event.key==='Enter') doSignup()"/>
+      </div>
+      <div class="err-msg" id="signup-err"></div>
+      <button class="btn-primary" onclick="doSignup()">🗳️ Vote Dene Jao!</button>
+      <div class="signup-footer">
+        Sirf results dekhna hai? <a onclick="guestView()">Guest mode</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SCREEN 2: VOTE ═══ -->
+  <div class="screen" id="screen-vote">
+
+    <!-- User bar (no switch btn — auto redirect handles it) -->
+    <div class="user-bar">
+      <div class="left">
+        <div class="avatar" id="user-avatar"></div>
+        <div class="user-info">
+          <div class="uname" id="user-display"></div>
+          <div class="utag"  id="user-tag">Ready to vote! 🙌</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Redirect countdown bar -->
+    <div class="redirect-bar" id="redirect-bar">
+      🔄 Next voter ke liye <span class="rcount" id="rcount">5</span> second mein sign-in page aayega...
+    </div>
+
+    <!-- Party cards -->
+    <div class="party-grid" id="party-grid"></div>
+
+    <!-- Actions -->
+    <div class="actions">
+      <button class="btn-dark" id="btn-results" onclick="toggleResults()">📊 Results</button>
+      <button class="btn-dark" onclick="toggleLog()" style="background:#4a3728;">👥 Voters</button>
+    </div>
+
+    <!-- Results locked message -->
+    <div class="results-locked" id="results-locked"></div>
+
+    <!-- Results panel -->
+    <div class="results-box" id="results-box"></div>
+
+    <!-- Voter log -->
+    <div class="voter-log" id="voter-log"></div>
+
+    <!-- Reset -->
+    <div class="bottom-links">
+      <button class="btn-outline" onclick="resetAll()">🗑️ Reset All Votes</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══ FUNNY OVERLAY ═══ -->
+<div class="funny-overlay" id="funny-overlay" style="display:none;" onclick="closeFunny()">
+  <div class="funny-box" onclick="event.stopPropagation()">
+    <span class="funny-emoji" id="funny-emoji"></span>
+    <div class="funny-text" id="funny-text"></div>
+    <div class="funny-sub"  id="funny-sub"></div>
+    <div class="funny-timer">Auto-closing in <span id="funny-countdown">3</span>s...</div>
+  </div>
+</div>
+
+<script>
+/* ═══════════════════ CONFIG ═══════════════════ */
+const VOTES_TO_UNLOCK = 5;   // results unlock after this many total votes
+const REDIRECT_SECS   = 5;   // auto-redirect after voting
+
+/* ═══════════════════ PARTY DATA ═══════════════════ */
+const PARTIES = [
+  {
+    id:'bjp', name:'BJP', color:'#FF6B00',
+    slogan:'Jai Shri Ram! 🙏',
+    funnyEmoji: '🙏🌸🚩',
+    funnyText:  'JAY SHREE RAM!! 🙏🙏🙏',
+    funnySub:   'Jai ho! Lotus khil gaya aaj! 🌸🚩',
+    logo:`<svg viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg">
+      <defs><radialGradient id="lc" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#fff3e0"/><stop offset="100%" stop-color="#ffcc80"/></radialGradient></defs>
+      <ellipse cx="36" cy="60" rx="26" ry="4" fill="#bbdefb" opacity="0.45"/>
+      <ellipse cx="36" cy="38" rx="6" ry="14" fill="#ef6c00" transform="rotate(-60 36 48)" opacity="0.7"/>
+      <ellipse cx="36" cy="38" rx="6" ry="14" fill="#ef6c00" transform="rotate(60 36 48)" opacity="0.7"/>
+      <ellipse cx="36" cy="34" rx="6" ry="15" fill="#ef6c00" transform="rotate(-30 36 48)" opacity="0.75"/>
+      <ellipse cx="36" cy="34" rx="6" ry="15" fill="#ef6c00" transform="rotate(30 36 48)" opacity="0.75"/>
+      <ellipse cx="36" cy="36" rx="5.5" ry="13" fill="#ff8f00" transform="rotate(-45 36 46)"/>
+      <ellipse cx="36" cy="36" rx="5.5" ry="13" fill="#ff8f00" transform="rotate(45 36 46)"/>
+      <ellipse cx="36" cy="34" rx="5.5" ry="14" fill="#ff8f00" transform="rotate(-15 36 48)"/>
+      <ellipse cx="36" cy="34" rx="5.5" ry="14" fill="#ff8f00" transform="rotate(15 36 48)"/>
+      <ellipse cx="36" cy="33" rx="5" ry="15" fill="#ffa726"/>
+      <circle cx="36" cy="38" r="9" fill="url(#lc)" stroke="#ff8f00" stroke-width="1.2"/>
+      <circle cx="36" cy="38" r="5" fill="#ffb300"/>
+      <circle cx="36" cy="36" r="1.5" fill="#fff"/>
+      <circle cx="33" cy="38" r="1.2" fill="#fff"/>
+      <circle cx="39" cy="38" r="1.2" fill="#fff"/>
+      <line x1="36" y1="47" x2="36" y2="58" stroke="#558b2f" stroke-width="2.5" stroke-linecap="round"/>
+      <ellipse cx="30" cy="55" rx="7" ry="3.5" fill="#66bb6a" transform="rotate(-20 30 55)"/>
+    </svg>`
+  },
+  {
+    id:'tmc', name:'TMC', color:'#1b8c3e',
+    slogan:'Maa Mati Manush 🌺',
+    funnyEmoji: '😤💚🌺',
+    funnyText:  'Hut BC! Ar kauke pali na! 😤',
+    funnySub:   'Didi ek, Didi anek! Joyjoy! 💚🔥',
+    logo:`<svg viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg">
+      <path d="M14 62 Q12 50 10 44" stroke="#388e3c" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+      <path d="M17 62 Q19 52 18 46" stroke="#43a047" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <path d="M21 62 Q20 54 22 49" stroke="#388e3c" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+      <path d="M55 62 Q57 51 59 45" stroke="#388e3c" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+      <path d="M52 62 Q50 53 51 47" stroke="#43a047" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <path d="M49 62 Q50 54 48 49" stroke="#388e3c" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+      <line x1="8" y1="62" x2="64" y2="62" stroke="#5d4037" stroke-width="2" stroke-linecap="round"/>
+      <path d="M28 62 Q27 52 26 44 Q25 36 27 28" stroke="#2e7d32" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+      <ellipse cx="21" cy="40" rx="8" ry="3.5" fill="#66bb6a" transform="rotate(-35 21 40)"/>
+      <ellipse cx="27" cy="20" rx="4" ry="8" fill="#e91e63" transform="rotate(-40 27 26)"/>
+      <ellipse cx="27" cy="20" rx="4" ry="8" fill="#e91e63" transform="rotate(40 27 26)"/>
+      <ellipse cx="27" cy="20" rx="3.5" ry="8" fill="#e91e63" transform="rotate(-15 27 26)"/>
+      <ellipse cx="27" cy="20" rx="3.5" ry="8" fill="#e91e63" transform="rotate(15 27 26)"/>
+      <ellipse cx="27" cy="18" rx="3.5" ry="8" fill="#e91e63"/>
+      <circle cx="27" cy="20" r="6" fill="#fff176" stroke="#f9a825" stroke-width="1.2"/>
+      <circle cx="27" cy="20" r="3" fill="#f9a825"/>
+      <path d="M44 62 Q45 52 46 44 Q47 36 45 28" stroke="#2e7d32" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+      <ellipse cx="51" cy="40" rx="8" ry="3.5" fill="#66bb6a" transform="rotate(35 51 40)"/>
+      <ellipse cx="45" cy="20" rx="4" ry="8" fill="#e91e63" transform="rotate(-40 45 26)"/>
+      <ellipse cx="45" cy="20" rx="4" ry="8" fill="#e91e63" transform="rotate(40 45 26)"/>
+      <ellipse cx="45" cy="20" rx="3.5" ry="8" fill="#e91e63" transform="rotate(-15 45 26)"/>
+      <ellipse cx="45" cy="20" rx="3.5" ry="8" fill="#e91e63" transform="rotate(15 45 26)"/>
+      <ellipse cx="45" cy="18" rx="3.5" ry="8" fill="#e91e63"/>
+      <circle cx="45" cy="20" r="6" fill="#fff176" stroke="#f9a825" stroke-width="1.2"/>
+      <circle cx="45" cy="20" r="3" fill="#f9a825"/>
+    </svg>`
+  },
+  {
+    id:'cong', name:'CONG', color:'#1565C0',
+    slogan:'Jai Congress! ✋',
+    funnyEmoji: '😭🙏✋',
+    funnyText:  'Sorry... Sorrrrrrrryyyy!! 😭😭😭',
+    funnySub:   'Hath jod ke maafi maangta hoon bhai! 🙏😂',
+    logo:`<svg viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg">
+      <rect x="22" y="38" width="28" height="22" rx="6" fill="#1565c0"/>
+      <rect x="13" y="40" width="12" height="8" rx="4" fill="#1565c0"/>
+      <rect x="22" y="20" width="8" height="22" rx="4" fill="#1565c0"/>
+      <rect x="32" y="16" width="8" height="24" rx="4" fill="#1565c0"/>
+      <rect x="42" y="20" width="7" height="22" rx="4" fill="#1565c0"/>
+      <rect x="50" y="26" width="6" height="18" rx="3" fill="#1565c0"/>
+      <ellipse cx="36" cy="50" rx="8" ry="5" fill="#fff" opacity="0.12"/>
+      <rect x="22" y="55" width="28" height="3.5" fill="#FF6B00"/>
+      <rect x="22" y="58.5" width="28" height="3.5" fill="#1b8c3e"/>
+    </svg>`
+  },
+  {
+    id:'cpim', name:'CPIM', color:'#c62828',
+    slogan:'Lal Salam! ☭',
+    funnyEmoji: '✊🔴☭',
+    funnyText:  'Laal Salaam Comrade! ✊🔴',
+    funnySub:   'Marx bhai teko dekh ke khush honge! ☭😄',
+    logo:`<svg viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="36" cy="36" r="30" fill="#c62828"/>
+      <circle cx="36" cy="36" r="26" fill="none" stroke="#ffcc00" stroke-width="1.5"/>
+      <path d="M30 46 Q18 38 22 26 Q26 14 38 18 Q32 20 30 28 Q28 36 36 40Z" fill="#ffcc00"/>
+      <path d="M36 40 L44 50" stroke="#ffcc00" stroke-width="4" stroke-linecap="round" fill="none"/>
+      <rect x="34" y="18" width="14" height="7" rx="2" fill="#ffcc00" transform="rotate(40 41 21.5)"/>
+      <line x1="38" y1="26" x2="28" y2="44" stroke="#ffcc00" stroke-width="4" stroke-linecap="round"/>
+      <polygon points="36,8 37.8,13.5 43.5,13.5 39,17 40.8,22.5 36,19 31.2,22.5 33,17 28.5,13.5 34.2,13.5" fill="#ffcc00"/>
+    </svg>`
+  },
+  {
+    id:'torch', name:'TORCH', color:'#7b1fa2',
+    slogan:'Light the Way! 🔦',
+    funnyEmoji: '🔦💡🌟',
+    funnyText:  'TORCH Zindabad!! 🔦🔥',
+    funnySub:   'Andhera hatao, TORCH jalao! Bijli nahi toh kya? 😂💡',
+    logo:`<svg viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="36" cy="22" rx="14" ry="16" fill="#ff6f00" opacity="0.18"/>
+      <path d="M36 8 Q44 16 42 26 Q40 32 36 34 Q32 32 30 26 Q28 16 36 8Z" fill="#ff8f00"/>
+      <path d="M36 14 Q40 20 38 27 Q37 30 36 31 Q35 30 34 27 Q32 20 36 14Z" fill="#ffee58"/>
+      <circle cx="36" cy="14" r="4" fill="#fff9c4" opacity="0.65"/>
+      <rect x="30" y="32" width="12" height="6" rx="2" fill="#8d6e63"/>
+      <rect x="32" y="36" width="8" height="22" rx="3" fill="#6d4c41"/>
+      <rect x="32" y="40" width="8" height="2" rx="1" fill="#4e342e"/>
+      <rect x="32" y="44" width="8" height="2" rx="1" fill="#4e342e"/>
+      <rect x="32" y="48" width="8" height="2" rx="1" fill="#4e342e"/>
+      <rect x="30" y="56" width="12" height="4" rx="2" fill="#5d4037"/>
+      <line x1="36" y1="6" x2="36" y2="2" stroke="#ffee58" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+      <line x1="44" y1="10" x2="47" y2="7" stroke="#ffee58" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
+      <line x1="28" y1="10" x2="25" y2="7" stroke="#ffee58" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
+      <line x1="48" y1="18" x2="52" y2="16" stroke="#ffee58" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/>
+      <line x1="24" y1="18" x2="20" y2="16" stroke="#ffee58" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/>
+    </svg>`
+  }
+];
+
+const BAR_COLORS = { bjp:'#FF6B00', tmc:'#1b8c3e', cong:'#1565C0', cpim:'#c62828', torch:'#7b1fa2' };
+
+/* ═══════════════════ STORAGE ═══════════════════ */
+function getVotes() { return JSON.parse(localStorage.getItem('mv26_votes') || 'null') || {bjp:0,tmc:0,cong:0,cpim:0,torch:0}; }
+function getLog()   { return JSON.parse(localStorage.getItem('mv26_log')   || '[]'); }
+function setVotes(v){ localStorage.setItem('mv26_votes', JSON.stringify(v)); }
+function setLog(l)  { localStorage.setItem('mv26_log',   JSON.stringify(l)); }
+
+/* ═══════════════════ SESSION ═══════════════════ */
+let currentUser  = null;
+let isGuest      = false;
+let showResults  = false;
+let showLog      = false;
+let redirectTimer = null;
+let funnyTimer    = null;
+
+/* ═══════════════════ SIGNUP ═══════════════════ */
+function doSignup() {
+  const raw = document.getElementById('username-input').value.trim();
+  const err = document.getElementById('signup-err');
+  if (!raw)          { err.textContent = '⚠️ Naam khali nahi ho sakta!'; return; }
+  if (raw.length < 2){ err.textContent = '⚠️ At least 2 characters chahiye.'; return; }
+  err.textContent = '';
+  isGuest = false;
+  currentUser = raw;
+  enterVoteScreen();
+}
+
+function guestView() {
+  isGuest = true;
+  currentUser = 'Guest 👀';
+  enterVoteScreen();
+}
+
+function enterVoteScreen() {
+  document.getElementById('screen-signup').classList.remove('active');
+  document.getElementById('screen-vote').classList.add('active');
+  document.getElementById('username-input').value = '';
+
+  document.getElementById('user-avatar').textContent = currentUser.charAt(0).toUpperCase();
+  document.getElementById('user-display').textContent = currentUser;
+
+  const log  = getLog();
+  const mine = !isGuest && log.find(e => e.username.toLowerCase() === currentUser.toLowerCase());
+
+  if (isGuest) {
+    document.getElementById('user-tag').textContent = 'Guest mode — sirf dekhna! 👀';
+  } else if (mine) {
+    const p = PARTIES.find(x => x.id === mine.party);
+    document.getElementById('user-tag').textContent = `✅ Already voted for ${p ? p.name : mine.party}`;
+    startRedirectCountdown(); // already voted — start countdown immediately
+  } else {
+    document.getElementById('user-tag').textContent = 'Ready to vote! 🙌';
+  }
+
+  showResults = false; showLog = false;
+  document.getElementById('results-box').classList.remove('open');
+  document.getElementById('voter-log').classList.remove('open');
+  document.getElementById('redirect-bar').classList.remove('show');
+
+  renderParties();
+  renderResultsLocked();
+}
+
+function goBackToSignup() {
+  clearTimeout(redirectTimer);
+  currentUser = null; isGuest = false;
+  showResults = false; showLog = false;
+  document.getElementById('screen-vote').classList.remove('active');
+  document.getElementById('screen-signup').classList.add('active');
+  document.getElementById('username-input').value = '';
+  document.getElementById('signup-err').textContent = '';
+  document.getElementById('redirect-bar').classList.remove('show');
+  document.getElementById('results-box').classList.remove('open');
+  document.getElementById('voter-log').classList.remove('open');
+}
+
+/* ═══════════════════ AUTO REDIRECT ═══════════════════ */
+function startRedirectCountdown() {
+  clearTimeout(redirectTimer);
+  const bar = document.getElementById('redirect-bar');
+  const cnt = document.getElementById('rcount');
+  bar.classList.add('show');
+  let secs = REDIRECT_SECS;
+  cnt.textContent = secs;
+
+  function tick() {
+    secs--;
+    cnt.textContent = secs;
+    if (secs <= 0) {
+      goBackToSignup();
+    } else {
+      redirectTimer = setTimeout(tick, 1000);
+    }
+  }
+  redirectTimer = setTimeout(tick, 1000);
+}
+
+/* ═══════════════════ RENDER PARTIES ═══════════════════ */
+function renderParties() {
+  const log  = getLog();
+  const mine = !isGuest && log.find(e => e.username.toLowerCase() === currentUser.toLowerCase());
+  const locked = !!mine || isGuest;
+
+  const grid = document.getElementById('party-grid');
+  grid.innerHTML = '';
+
+  PARTIES.forEach(p => {
+    const isMyVote = mine && mine.party === p.id;
+    const card = document.createElement('div');
+    card.className = 'party-card' + (locked ? ' disabled' : '') + (isMyVote ? ' selected' : '');
+    card.innerHTML = `
+      <div class="confetti-zone" id="conf-${p.id}"></div>
+      <div class="logo-wrap">${p.logo}</div>
+      <div class="party-name">${p.name}</div>
+      <div class="party-slogan">${p.slogan}</div>
+      ${!locked
+        ? `<button class="vote-btn" style="background:${p.color}" onclick="castVote('${p.id}',event)">Vote ${p.name}</button>`
+        : isMyVote
+          ? `<div class="my-vote-tag">✅ Your vote!</div>`
+          : ''}
+    `;
+    grid.appendChild(card);
+  });
+}
+
+/* ═══════════════════ CAST VOTE ═══════════════════ */
+function castVote(partyId, e) {
+  e && e.stopPropagation();
+  if (isGuest) return;
+
+  const log = getLog();
+  if (log.find(x => x.username.toLowerCase() === currentUser.toLowerCase())) return;
+
+  const votes = getVotes();
+  votes[partyId]++;
+  setVotes(votes);
+
+  const now = new Date();
+  log.push({
+    username: currentUser,
+    party: partyId,
+    time: now.toLocaleTimeString('en-IN', {hour:'2-digit', minute:'2-digit'})
+  });
+  setLog(log);
+
+  boom(partyId);
+
+  // Show funny overlay
+  const p = PARTIES.find(x => x.id === partyId);
+  showFunny(p);
+
+  setTimeout(() => {
+    renderParties();
+    document.getElementById('user-tag').textContent = `✅ Voted for ${p.name}!`;
+    renderResultsLocked();
+    if (showResults) renderResults();
+    if (showLog) renderLog();
+  }, 200);
+
+  // Start redirect after funny overlay
+  // Funny auto-closes in 3s, then redirect kicks in after REDIRECT_SECS total
+  // So we start countdown after funny closes (~3.2s)
+  setTimeout(() => startRedirectCountdown(), 3200);
+}
+
+/* ═══════════════════ FUNNY OVERLAY ═══════════════════ */
+function showFunny(p) {
+  clearTimeout(funnyTimer);
+  document.getElementById('funny-emoji').textContent = p.funnyEmoji;
+  document.getElementById('funny-text').textContent  = p.funnyText;
+  document.getElementById('funny-sub').textContent   = p.funnySub;
+  document.getElementById('funny-countdown').textContent = '3';
+
+  const overlay = document.getElementById('funny-overlay');
+  overlay.style.display = 'flex';
+
+  let c = 3;
+  function tick() {
+    c--;
+    document.getElementById('funny-countdown').textContent = c;
+    if (c <= 0) { closeFunny(); }
+    else { funnyTimer = setTimeout(tick, 1000); }
+  }
+  funnyTimer = setTimeout(tick, 1000);
+}
+
+function closeFunny() {
+  clearTimeout(funnyTimer);
+  document.getElementById('funny-overlay').style.display = 'none';
+}
+
+/* ═══════════════════ CONFETTI ═══════════════════ */
+function boom(id) {
+  const zone = document.getElementById('conf-' + id);
+  if (!zone) return;
+  const cols = ['#f9c74f','#90be6d','#f94144','#4cc9f0','#f8961e','#b5179e'];
+  for (let i = 0; i < 18; i++) {
+    const d = document.createElement('div');
+    d.className = 'cdot';
+    d.style.cssText = `left:${8+Math.random()*84}%;top:${4+Math.random()*36}%;background:${cols[i%cols.length]};animation-delay:${Math.random()*0.22}s;`;
+    zone.appendChild(d);
+  }
+  setTimeout(() => zone.innerHTML = '', 1000);
+}
+
+/* ═══════════════════ RESULTS (LOCKED / UNLOCKED) ═══════════════════ */
+function renderResultsLocked() {
+  const votes = getVotes();
+  const total = Object.values(votes).reduce((a,b)=>a+b,0);
+  const pct   = Math.min(100, Math.round((total / VOTES_TO_UNLOCK) * 100));
+  const locked = total < VOTES_TO_UNLOCK;
+
+  const lockedEl = document.getElementById('results-locked');
+  const btn      = document.getElementById('btn-results');
+
+  if (locked) {
+    lockedEl.classList.add('show');
+    lockedEl.innerHTML = `
+      <span class="lock-icon">🔒</span>
+      <div class="lock-text">Results are locked!<br>
+        <strong>${total}/${VOTES_TO_UNLOCK}</strong> votes needed to unlock — <strong>${VOTES_TO_UNLOCK - total} more</strong> to go!</div>
+      <div class="lock-progress">
+        <div style="font-size:11px;color:var(--muted)">Progress: ${pct}%</div>
+        <div class="lock-bar-track"><div class="lock-bar-fill" style="width:${pct}%"></div></div>
+      </div>`;
+    btn.disabled = true;
+    btn.style.opacity = '0.45';
+    btn.style.cursor  = 'not-allowed';
+    // hide results if it was open
+    showResults = false;
+    document.getElementById('results-box').classList.remove('open');
+  } else {
+    lockedEl.classList.remove('show');
+    btn.disabled = false;
+    btn.style.opacity = '1';
+    btn.style.cursor  = 'pointer';
+  }
+}
+
+function toggleResults() {
+  const votes = getVotes();
+  const total = Object.values(votes).reduce((a,b)=>a+b,0);
+  if (total < VOTES_TO_UNLOCK) { toast(`🔒 ${VOTES_TO_UNLOCK - total} more votes needed!`); return; }
+
+  showResults = !showResults;
+  const box = document.getElementById('results-box');
+  if (showResults) { box.classList.add('open'); renderResults(); setTimeout(()=>box.scrollIntoView({behavior:'smooth',block:'nearest'}),80); }
+  else box.classList.remove('open');
+}
+
+function renderResults() {
+  const votes = getVotes();
+  const total = Object.values(votes).reduce((a,b)=>a+b,0);
+  const sorted = [...PARTIES].sort((a,b)=>votes[b.id]-votes[a.id]);
+  const winner = sorted[0];
+  const box = document.getElementById('results-box');
+
+  let html = `<h2>📊 Live Results</h2>`;
+  PARTIES.forEach(p => {
+    const v   = votes[p.id];
+    const pct = total > 0 ? Math.round((v/total)*100) : 0;
+    const isWin = winner.id===p.id && v>0;
+    html += `<div class="result-row">
+      <div class="result-header">
+        <span class="result-label"><span class="mini-logo">${p.logo}</span>${p.name}${isWin?' 👑':''}</span>
+        <span class="result-count">${v} vote${v!==1?'s':''} (${pct}%)</span>
+      </div>
+      <div class="bar-track"><div class="bar-fill" id="bar-${p.id}" style="background:${BAR_COLORS[p.id]}"></div></div>
+    </div>`;
+  });
+
+  if (total === 0) {
+    html += `<div class="winner-box"><div class="winner-trophy">🙈</div><div class="winner-name">No votes yet!</div></div>`;
+  } else {
+    const allTie = PARTIES.every(p=>votes[p.id]===votes[PARTIES[0].id]);
+    if (allTie) {
+      html += `<div class="winner-box"><div class="winner-trophy">🤝</div><div class="winner-name">Tie! Recount hoga! 🤣</div><div class="winner-sub">Democracy confused hai</div></div>`;
+    } else {
+      const wp = PARTIES.find(p=>p.id===winner.id);
+      html += `<div class="winner-box"><div class="winner-trophy">🏆</div><div class="winner-name">${wp.name} is winning!</div><div class="winner-sub">${votes[winner.id]} votes — ${wp.slogan}</div></div>`;
+    }
+  }
+  html += `<div class="total-note">Total votes: <strong>${total}</strong></div>`;
+  box.innerHTML = html;
+
+  setTimeout(() => {
+    PARTIES.forEach(p => {
+      const v = votes[p.id];
+      const pct = total > 0 ? Math.round((v/total)*100) : 0;
+      const bar = document.getElementById('bar-'+p.id);
+      if (bar) bar.style.width = pct + '%';
+    });
+  }, 60);
+}
+
+/* ═══════════════════ VOTER LOG ═══════════════════ */
+function toggleLog() {
+  showLog = !showLog;
+  const panel = document.getElementById('voter-log');
+  if (showLog) { panel.classList.add('open'); renderLog(); setTimeout(()=>panel.scrollIntoView({behavior:'smooth',block:'nearest'}),80); }
+  else panel.classList.remove('open');
+}
+
+function renderLog() {
+  const entries = getLog();
+  const panel = document.getElementById('voter-log');
+
+  if (entries.length === 0) {
+    panel.innerHTML = `<h3>👥 Voter List</h3><div class="empty-log">Koi nahi aaya abhi tak! 😴</div>`;
+    return;
+  }
+
+  let html = `<h3>👥 Voter List <span style="font-weight:400;color:var(--muted);font-size:13px;">(${entries.length} voted)</span></h3>
+    <table>
+      <thead><tr><th>#</th><th>Voter Name</th><th>Time</th></tr></thead>
+      <tbody>`;
+
+  entries.forEach((e, i) => {
+    const isMe = !isGuest && e.username.toLowerCase() === currentUser.toLowerCase();
+    html += `<tr style="${isMe ? 'background:#f0faf0;' : ''}">
+      <td style="color:var(--muted);font-size:12px;">${i+1}</td>
+      <td style="font-weight:700">${esc(e.username)}${isMe ? '<span class="you-tag">you</span>' : ''}</td>
+      <td style="color:var(--muted);font-size:12px;">${e.time}</td>
+    </tr>`;
+  });
+
+  html += `</tbody></table>`;
+  panel.innerHTML = html;
+}
+
+/* ═══════════════════ RESET ALL ═══════════════════ */
+function resetAll() {
+  if (!confirm('Reset ALL votes and voter list?\nThis cannot be undone!')) return;
+  clearTimeout(redirectTimer);
+  localStorage.removeItem('mv26_votes');
+  localStorage.removeItem('mv26_log');
+  renderParties();
+  renderResultsLocked();
+  document.getElementById('user-tag').textContent = isGuest ? 'Guest mode — sirf dekhna! 👀' : 'Ready to vote! 🙌';
+  document.getElementById('redirect-bar').classList.remove('show');
+  showResults = false; showLog = false;
+  document.getElementById('results-box').classList.remove('open');
+  document.getElementById('voter-log').classList.remove('open');
+  toast('Sab reset! Naya election shuru! 🗳️');
+}
+
+/* ═══════════════════ UTILS ═══════════════════ */
+function toast(msg) {
+  document.querySelectorAll('.toast').forEach(t=>t.remove());
+  const t = document.createElement('div');
+  t.className='toast'; t.textContent=msg;
+  document.body.appendChild(t);
+  setTimeout(()=>t.remove(), 2600);
+}
+function esc(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+/* init */
+renderResultsLocked();
+</script>
+</body>
+</html>
